@@ -18,11 +18,11 @@ async def send_welcome(message: types.Message):
     """
     await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
 
-@dp.message_handler(photo)
-async def echo(message: types.Message):
+@dp.message_handler(content_types=['photo'])
+async def foto_input(message: types.Message):
     # old style:
     # await bot.send_message(message.chat.id, message.text)
-
+    message.photo[-1].download('test.jpg')
     await message.answer('Nice foto!')
 
 @dp.message_handler()
