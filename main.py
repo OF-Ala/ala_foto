@@ -27,11 +27,11 @@ async def foto_input(message: types.Message):
     # old style:
     # await bot.send_message(message.chat.id, message.text)
     # message.answer('Nice foto! Wait a sec, we are transforming it.')
-    ms = int(time.time())
+    await ms = int(time.time())
 
     file_name = 'foto' + str(ms) + '.jpg'
-    message.photo[-1].download(save_path + file_name)
-    model.Transform_to_choko(file_name)
+    await message.photo[-1].download(save_path + file_name)
+    await model.Transform_to_choko(file_name)
     #message.answer('Here!')
     await message.answer_photo(save_path + 'conv_'+ file_name)
     
