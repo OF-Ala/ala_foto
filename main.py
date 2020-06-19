@@ -33,6 +33,7 @@ async def foto_input(message: types.Message):
     message.photo[-1].download(save_path + file_name)
     model.Transform_to_choko(file_name)
     await message.answer_photo(save_path + 'conv_'+ file_name)
+    await message.answer('Here!')
 
 
 @dp.message_handler()
