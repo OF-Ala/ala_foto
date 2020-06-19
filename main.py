@@ -27,7 +27,7 @@ async def foto_input(message: types.Message):
     # old style:
     # await bot.send_message(message.chat.id, message.text)
     # message.answer('Nice foto! Wait a sec, we are transforming it.')
-    await ms = int(time.time())
+    ms = int(time.time())
 
     file_name = 'foto' + str(ms) + '.jpg'
     await message.photo[-1].download(save_path + file_name)
