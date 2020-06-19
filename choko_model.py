@@ -245,10 +245,10 @@ class Choko_transform_model():
         self.dec_A = Discriminator_net()
         self.dec_B = Discriminator_net()
 
-        self.gen_A.load_state_dict(torch.load(self.save_path + 'BCE-gen_A.pt'))
-        self.gen_B.load_state_dict(torch.load(self.save_path + 'BCE-gen_B.pt'))
-        self.dec_A.load_state_dict(torch.load(self.save_path + 'BCE-dec_A.pt'))
-        self.dec_B.load_state_dict(torch.load(self.save_path + 'BCE-dec_B.pt'))
+        self.gen_A.load_state_dict(torch.load(self.save_path + 'BCE-gen_A.pt', map_location='cpu'))
+        self.gen_B.load_state_dict(torch.load(self.save_path + 'BCE-gen_B.pt', map_location='cpu'))
+        self.dec_A.load_state_dict(torch.load(self.save_path + 'BCE-dec_A.pt', map_location='cpu'))
+        self.dec_B.load_state_dict(torch.load(self.save_path + 'BCE-dec_B.pt', map_location='cpu'))
 
         self.gen_A.eval()
         self.gen_B.eval()
