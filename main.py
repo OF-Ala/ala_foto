@@ -16,7 +16,7 @@ WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
 # webserver settings
 WEBAPP_HOST = '0.0.0.0'  # or ip
-WEBAPP_PORT = os.eviron['PORT']
+WEBAPP_PORT = int(os.eviron['PORT'])
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -80,7 +80,7 @@ async def on_shutdown(dp):
 
 
 if __name__ == '__main__':
-    if USE_WEBHOOK == True:
+    if USE_WEBHOOK == '1':
         executor.start_webhook(
             dispatcher=dp,
             webhook_path=WEBHOOK_PATH,
