@@ -10,7 +10,7 @@ API_TOKEN = os.eviron['BOT_TOKEN']
 USE_WEBHOOK = os.eviron['USE_WEBHOOK']
 
 # webhook settings
-WEBHOOK_HOST = 'https://ala-foto-bot.herokuapp.com/bot'
+WEBHOOK_HOST = 'https://ala-foto-bot.herokuapp.com/'
 WEBHOOK_PATH = os.eviron['BOT_TOKEN']
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
