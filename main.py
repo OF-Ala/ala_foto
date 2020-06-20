@@ -6,17 +6,17 @@ import os
 from aiogram import Bot, Dispatcher, executor, types
 
 #API_TOKEN = '1011117684:AAG4jD1d7p6N19DNV7NqXr3kvhN0bdZVbN8'
-API_TOKEN = os.eviron['BOT_TOKEN']
-USE_WEBHOOK = os.eviron['USE_WEBHOOK']
+API_TOKEN = os.environ['BOT_TOKEN']
+USE_WEBHOOK = os.environ['USE_WEBHOOK']
 
 # webhook settings
 WEBHOOK_HOST = 'https://ala-foto-bot.herokuapp.com/'
-WEBHOOK_PATH = os.eviron['BOT_TOKEN']
+WEBHOOK_PATH = os.environ['BOT_TOKEN']
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
 # webserver settings
 WEBAPP_HOST = '0.0.0.0'  # or ip
-WEBAPP_PORT = int(os.eviron['PORT'])
+WEBAPP_PORT = int(os.environ['PORT'])
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
