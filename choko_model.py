@@ -277,7 +277,8 @@ class Choko_transform_model():
         res_img = ((res_img + 1) * 127.5).astype(np.uint8)
         result = Image.fromarray(res_img)
         result.save(self.save_path + 'conv_' + file_name)
-        return result
+        #return result
+        return self.save_path + 'conv_' + file_name
 
     def Transform_to_choco(self, file_name):
         input_img = self.img_to_tensor(file_name)
