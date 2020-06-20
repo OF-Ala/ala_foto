@@ -3,7 +3,7 @@ import choko_model
 import time
 import os
 
-from aiogram import Bot, Dispatcher, executor, types, Updater
+from aiogram import Bot, Dispatcher, executor, types
 
 API_TOKEN = os.environ['BOT_TOKEN']
 USE_WEBHOOK = os.environ['USE_WEBHOOK']
