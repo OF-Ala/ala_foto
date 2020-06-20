@@ -1,10 +1,22 @@
 import logging
 import choko_model
 import time
+import os
 
 from aiogram import Bot, Dispatcher, executor, types
 
-API_TOKEN = '1011117684:AAG4jD1d7p6N19DNV7NqXr3kvhN0bdZVbN8'
+#API_TOKEN = '1011117684:AAG4jD1d7p6N19DNV7NqXr3kvhN0bdZVbN8'
+API_TOKEN = os.eviron['BOT_TOKEN']
+USE_WEBHOOK = os.eviron['USE_WEBHOOK']
+
+# webhook settings
+WEBHOOK_HOST = 'https://ala-foto-bot.herokuapp.com/'
+WEBHOOK_PATH = os.eviron['BOT_TOKEN']
+WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+
+# webserver settings
+WEBAPP_HOST = '0.0.0.0'  # or ip
+WEBAPP_PORT = os.eviron['PORT']
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -46,5 +58,38 @@ async def echo(message: types.Message):
 
     await message.answer(message.text)
 
+    
+async def on_startup(dp):
+    await bot.set_webhook(WEBHOOK_URL)
+    # insert code here to run it after start
+
+
+async def on_shutdown(dp):
+    logging.warning('Shutting down..')
+
+    # insert code here to run it before shutdown
+
+    # Remove webhook (not acceptable in some cases)
+    await bot.delete_webhook()
+
+    # Close DB connection (if used)
+    await dp.storage.close()
+    await dp.storage.wait_closed()
+
+    logging.warning('Bye!')
+
+
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    if USE_WEBHOOK == True:
+        executor.start_webhook(
+            dispatcher=dp,
+            webhook_path=WEBHOOK_PATH,
+            on_startup=on_startup,
+            on_shutdown=on_shutdown,
+            skip_updates=True,
+            host=WEBAPP_HOST,
+            port=WEBAPP_PORT,
+        )
+     else:
+        executor.start_polling(dp, skip_updates=True)
+        
