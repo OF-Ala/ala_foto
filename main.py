@@ -32,7 +32,12 @@ async def send_welcome(message: types.Message):
     """
     This handler will be called when user sends `/start` or `/help` command
     """
-    await message.reply("Hi!\nI'm AlaFotoBot! I can make your foto look more choko!\nSend me a foto and see yourself!")
+    if USE_WEBHOOK == '1':
+        message_hook = ' (using webhook)'
+    else:
+        message_hook = ''
+        
+    await message.reply("Hi!\nI'm AlaFotoBot' + message_hook + '! I can make your foto look different!\nSend me a foto and see yourself!")
 
 @dp.message_handler(content_types=['photo'])
 async def foto_input(message: types.Message):
