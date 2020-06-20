@@ -3,9 +3,8 @@ import choko_model
 import time
 import os
 
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, executor, types, Updater
 
-#API_TOKEN = '1011117684:AAG4jD1d7p6N19DNV7NqXr3kvhN0bdZVbN8'
 API_TOKEN = os.environ['BOT_TOKEN']
 USE_WEBHOOK = os.environ['USE_WEBHOOK']
 
@@ -83,18 +82,22 @@ async def on_shutdown(dp):
 
     logging.warning('Bye!')
 
+    
+def webhook(update):
+    dispatcher.process_update(update)
 
 if __name__ == '__main__':
     if USE_WEBHOOK == '1':
         executor.start_webhook(
             dispatcher=dp,
-            webhook_path=WEBHOOK_PATH,
+            webhook_path=WEBHOOK_URL,
             on_startup=on_startup,
             on_shutdown=on_shutdown,
             skip_updates=True,
             host=WEBAPP_HOST,
             port=WEBAPP_PORT,
-        )
+        )  
+     
     else:
         executor.start_polling(dp, skip_updates=True)
         
