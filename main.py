@@ -50,7 +50,7 @@ inline_kb_from2 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde
 def Get_input_color(file_name):
     input_color, confidence = hair_classifier.predict_one_sample(file_name)
     files_color_dict[file_name] = input_color
-    return colors_dict[input_color], confidence
+    return input_color, confidence
 
 
 def Make_transformation(file_name, input_color, output_color):
@@ -106,12 +106,13 @@ async def foto_input(message: types.Message):
     file_name = 'foto' + str(message.chat.id) + '.jpg'
     await message.photo[-1].download(save_path + file_name)
     foto_color, confidence = Get_input_color(file_name)
+    foto_color_name = colors_dict[foto_color]
     if confidence > 0.85:
-        answer_str = f"Nice foto! Your hair color is {foto_color}!"
+        answer_str = f"Nice foto! Your hair color is {foto_color_name}!"
     elif confidence > 0.65:
-        answer_str = f"Nice foto! Looks like your hair color is {foto_color}"
+        answer_str = f"Nice foto! Looks like your hair color is {foto_color_name}"
     else:
-        answer_str = f"Nice foto! Your hair color looks like {foto_color}. I\'m not sure though."
+        answer_str = f"Nice foto! Your hair color looks like {foto_color_name}. I\'m not sure though."
 
     if foto_color == 0:
         await message.answer(answer_str, reply_markup=kb.inline_kb_from0)
