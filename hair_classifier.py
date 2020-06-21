@@ -80,7 +80,7 @@ class Classifier_model():
         #self.model = models.resnet18(pretrained=False)
         #self.model.fc = nn.Linear(512, 3)
         #self.model.load_state_dict(torch.load(self.save_path + 'classification.pt', map_location='cpu'))
-        self.model = SimpleCNN()
+        self.model = SimpleCNN(3)
         self.model.load_state_dict(torch.load(self.save_path + 'classification-simple.pt', map_location='cpu'))
 
         self.model.eval()
