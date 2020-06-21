@@ -108,11 +108,11 @@ async def foto_input(message: types.Message):
     foto_color, confidence = Get_input_color(file_name)
     foto_color_name = colors_dict[foto_color]
     if confidence > 0.85:
-        answer_str = f"Nice foto! Your hair color is {foto_color_name}!\nChoose color you want to switch to:"
+        answer_str = f"Nice foto! Your hair color is {foto_color_name}!\nChoose color you want to switch to:" + str(message.chat.id)
     elif confidence > 0.65:
-        answer_str = f"Nice foto! Looks like your hair color is {foto_color_name}.\nChoose color you want to switch to:"
+        answer_str = f"Nice foto! Looks like your hair color is {foto_color_name}.\nChoose color you want to switch to:" + str(message.chat.id)
     else:
-        answer_str = f"Nice foto! Your hair color looks like {foto_color_name}. I\'m not sure though.\nChoose color you want to switch to:"
+        answer_str = f"Nice foto! Your hair color looks like {foto_color_name}. I\'m not sure though.\nChoose color you want to switch to:" + str(message.chat.id)
 
     if foto_color == 0:
         await message.answer(answer_str, reply_markup=inline_kb_from0)
