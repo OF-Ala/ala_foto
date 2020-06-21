@@ -77,8 +77,8 @@ class SimpleCNN(nn.Module):
 class Classifier_model():
 
     def __init__(self, path_name):
-        # все изображения будут масштабированы к размеру 256x256 px
-        self.RESCALE_SIZE = 256
+        # все изображения будут масштабированы к размеру 224х224 px
+        self.RESCALE_SIZE = 224
         self.save_path = path_name
         #self.model = models.resnet18(pretrained=False)
         #self.model.fc = nn.Linear(512, 3)
