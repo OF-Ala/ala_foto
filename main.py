@@ -9,7 +9,7 @@ API_TOKEN = os.environ['BOT_TOKEN']
 USE_WEBHOOK = os.environ['USE_WEBHOOK']
 
 # webhook settings
-WEBHOOK_HOST = 'https://ala-foto-bot.herokuapp.com/'
+WEBHOOK_HOST = 'https://ala-foto-bot.herokuapp.com'
 WEBHOOK_PATH = f"/{API_TOKEN}/" 
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
