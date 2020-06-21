@@ -1,16 +1,20 @@
 import logging
-import choko_model
+import transform_model
 import time
 import os
+import hair_classifier
 
 from aiogram import Bot, Dispatcher, executor, types
+from aiogram.types import ReplyKeyboardRemove, \
+    ReplyKeyboardMarkup, KeyboardButton, \
+    InlineKeyboardMarkup, InlineKeyboardButton
 
 API_TOKEN = os.environ['BOT_TOKEN']
 USE_WEBHOOK = os.environ['USE_WEBHOOK']
 
 # webhook settings
 WEBHOOK_HOST = 'https://ala-foto-bot.herokuapp.com'
-WEBHOOK_PATH = f"/{API_TOKEN}/" 
+WEBHOOK_PATH = f"/{API_TOKEN}/"
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
 # webserver settings
@@ -24,7 +28,59 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 save_path = 'data/'
-model = choko_model.Choko_transform_model(save_path)
+model_blond2brown = transform_model.Transform_model(save_path, 'blond2brown')
+model_blond2ginger = transform_model.Transform_model(save_path, 'blond2ginger')
+model_brown2ginger = transform_model.Transform_model(save_path, 'brown2ginger')
+hair_classifier = hair_classifier.Classifier_model(save_path)
+
+colors_dict = {
+  0: 'blonde',
+  1: 'brown',
+  2: 'ginger'
+}
+files_color_dict = {}  #input_color
+
+inline_btn_blonde = InlineKeyboardButton('Blonde', callback_data=0)
+inline_btn_brown = InlineKeyboardButton('Brown', callback_data=1)
+inline_btn_ginger = InlineKeyboardButton('Ginger', callback_data=2)
+inline_kb_from0 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_ginger)
+inline_kb_from1 = InlineKeyboardMarkup().add(inline_btn_blonde, inline_btn_ginger)
+inline_kb_from2 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde)
+
+def Get_input_color(file_name):
+    input_color, confidence = hair_classifier.predict_one_sample(file_name)
+    files_color_dict[file_name] = input_color
+    return colors_dict[input_color], confidence
+
+
+def Make_transformation(file_name, input_color, output_color):
+
+    if input_color == 0: #blond
+        if output_color == 1:
+            output_name = model_blond2brown.Transform_to_B(file_name)
+        elif output_color == 2:
+            output_name = model_blond2ginger.Transform_to_B(file_name)
+        else:
+            output_name = input_name
+
+    elif input_color == 1: #brown
+        if output_color == 0:
+            output_name = model_blond2brown.Transform_to_A(file_name)
+        elif output_color == 2:
+            output_name = model_brown2ginger.Transform_to_B(file_name)
+        else:
+            output_name = input_name
+    elif input_color == 2:  #ginger:
+        if output_color == 0:
+            output_name = model_blond2ginger.Transform_to_A(file_name)
+        elif output_color == 1:
+            output_name = model_brown2ginger.Transform_to_A(file_name)
+        else:
+            output_name = input_name
+    else:
+        output_name = input_name
+
+    return output_name
 
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
@@ -35,8 +91,10 @@ async def send_welcome(message: types.Message):
         message_hook = ' (using webhook)'
     else:
         message_hook = ''
-        
-    await message.reply("Hi!\nI'm AlaFotoBot' + message_hook + '! I can make your foto look different!\nSend me a foto and see yourself!")
+
+    await message.reply(
+        "Hi!\nI'm AlaFotoBot' + message_hook + '! I can make your foto look different!\nSend me a foto and see yourself!")
+
 
 @dp.message_handler(content_types=['photo'])
 async def foto_input(message: types.Message):
@@ -45,14 +103,38 @@ async def foto_input(message: types.Message):
     # message.answer('Nice foto! Wait a sec, we are transforming it.')
     ms = int(time.time())
 
-    file_name = 'foto' + str(ms) + '.jpg'
+    file_name = 'foto' + str(message.chat.id) + '.jpg'
     await message.photo[-1].download(save_path + file_name)
-    out_path = model.Transform_to_choco(file_name)
-    #message.answer('Here!')
-    #await message.answer_photo(save_path + 'conv_'+ file_name)
+    foto_color, confidence = Get_input_color(file_name)
+    if confidence > 0.85:
+        answer_str = f"Nice foto! Your hair color is {foto_color}!"
+    elif confidence > 0.65:
+        answer_str = f"Nice foto! Looks like your hair color is {foto_color}"
+    else:
+        answer_str = f"Nice foto! Your hair color looks like {foto_color}. I\'m not sure though."
+
+    if foto_color == 0:
+        await message.answer(answer_str, reply_markup=kb.inline_kb_from0)
+    elif foto_color == 1:
+        await message.answer(answer_str, reply_markup=kb.inline_kb_from1)
+    elif foto_color == 2:
+        await message.answer(answer_str, reply_markup=kb.inline_kb_from2)
+    else:
+        await message.answer("Something went wrong, sorry")
+
+
+
+
+@dp.callback_query_handler(func=lambda c: c.data and c.data.isdigit())
+async def process_callback_transform(callback_query: types.CallbackQuery):
+    output_color = callback_query.data
+    file_name = 'foto' + str(callback_query.from_user.id) + '.jpg'
+    input_color = files_color_dict[file_name]
+
+    out_path = Make_transformation(file_name, input_color, output_color)
+
     img_result = open(out_path, 'rb')
-    await message.answer_photo(img_result)
-    
+    await message.answer_photo(img_result, "Changing from" + color_dict[input_color] + " to " + color_dict[output_color])
 
 
 @dp.message_handler()
@@ -60,9 +142,9 @@ async def echo(message: types.Message):
     # old style:
     # await bot.send_message(message.chat.id, message.text)
 
-    await message.answer(message.text)
+    await message.answer("Hi!\nI'm AlaFotoBot! I can make your foto look different!\nSend me a foto and see yourself!")
 
-    
+
 async def on_startup(dp):
     await bot.set_webhook(WEBHOOK_URL)
     # insert code here to run it after start
@@ -82,9 +164,10 @@ async def on_shutdown(dp):
 
     logging.warning('Bye!')
 
-    
+
 def webhook(update):
     dispatcher.process_update(update)
+
 
 if __name__ == '__main__':
     if USE_WEBHOOK == '1':
@@ -96,8 +179,7 @@ if __name__ == '__main__':
             skip_updates=True,
             host=WEBAPP_HOST,
             port=WEBAPP_PORT,
-        )  
-     
+        )
+
     else:
         executor.start_polling(dp, skip_updates=True)
-        
