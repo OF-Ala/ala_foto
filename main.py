@@ -125,7 +125,8 @@ async def foto_input(message: types.Message):
 
 
 
-@dp.callback_query_handler(func=lambda c: c.data and c.data.isdigit())
+#@dp.callback_query_handler(func=lambda c: c.data)
+@dp.callback_query_handler(lambda callback_query: True)
 async def process_callback_transform(callback_query: types.CallbackQuery):
     output_color = callback_query.data
     file_name = 'foto' + str(callback_query.from_user.id) + '.jpg'
