@@ -61,7 +61,7 @@ def Make_transformation(file_name, input_color, output_color):
         elif output_color == 2:
             output_name = model_blond2ginger.Transform_to_B(file_name)
         else:
-            output_name = file_name
+            output_name = self.save_path + file_name
 
     elif input_color == 1: #brown
         if output_color == 0:
@@ -69,16 +69,16 @@ def Make_transformation(file_name, input_color, output_color):
         elif output_color == 2:
             output_name = model_brown2ginger.Transform_to_B(file_name)
         else:
-            output_name = file_name
+            output_name = self.save_path + file_name
     elif input_color == 2:  #ginger:
         if output_color == 0:
             output_name = model_blond2ginger.Transform_to_A(file_name)
         elif output_color == 1:
             output_name = model_brown2ginger.Transform_to_A(file_name)
         else:
-            output_name = file_name
+            output_name = self.save_path + file_name
     else:
-        output_name = file_name
+        output_name = self.save_path + file_name
 
     return output_name
 
@@ -129,14 +129,14 @@ async def foto_input(message: types.Message):
 #@dp.callback_query_handler(func=lambda c: c.data)
 @dp.callback_query_handler(lambda callback_query: True)
 async def process_callback_transform(callback_query: types.CallbackQuery):
-    output_color = callback_query.data
+    output_color = int(callback_query.data)
     file_name = 'foto' + str(callback_query.from_user.id) + '.jpg'
     input_color = files_color_dict[file_name]
 
     out_path = Make_transformation(file_name, input_color, output_color)
 
-    img_result = open(out_path, 'rb')
-    await message.answer_photo(img_result, "Changing hair color from" + color_dict[input_color] + " to " + color_dict[output_color])
+    img_result = open(save_path + out_path, 'rb')
+    await message.answer_photo(img_result, "Changing hair color from" + color_dict[input_color] + " to " + color_dict[output_color] + ':' + str(callback_query.data))
 
 
 @dp.message_handler()
