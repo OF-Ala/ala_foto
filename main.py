@@ -137,7 +137,7 @@ async def process_callback_transform(callback_query: types.CallbackQuery):
 
     img_result = open(out_path, 'rb')
     await bot.send_photo(callback_query.from_user.id, img_result, \
-                         "Changing hair color from" + colors_dict[input_color] + " to " + colors_dict[output_color])
+                         "Changing hair color from " + colors_dict[input_color] + " to " + colors_dict[output_color])
 
 
 @dp.message_handler()
