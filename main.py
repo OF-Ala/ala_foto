@@ -135,7 +135,7 @@ async def process_callback_transform(callback_query: types.CallbackQuery):
 
     out_path = Make_transformation(file_name, input_color, output_color)
 
-    img_result = open(save_path + out_path, 'rb')
+    img_result = open(out_path, 'rb')
     await message.answer_photo(img_result, "Changing hair color from" + color_dict[input_color] + " to " + color_dict[output_color] + ':' + str(callback_query.data))
 
 
