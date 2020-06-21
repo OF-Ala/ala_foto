@@ -115,11 +115,11 @@ async def foto_input(message: types.Message):
         answer_str = f"Nice foto! Your hair color looks like {foto_color_name}. I\'m not sure though."
 
     if foto_color == 0:
-        await message.answer(answer_str, reply_markup=kb.inline_kb_from0)
+        await message.answer(answer_str, reply_markup=inline_kb_from0)
     elif foto_color == 1:
-        await message.answer(answer_str, reply_markup=kb.inline_kb_from1)
+        await message.answer(answer_str, reply_markup=inline_kb_from1)
     elif foto_color == 2:
-        await message.answer(answer_str, reply_markup=kb.inline_kb_from2)
+        await message.answer(answer_str, reply_markup=inline_kb_from2)
     else:
         await message.answer("Something went wrong, sorry")
 
