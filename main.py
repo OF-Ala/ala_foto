@@ -61,7 +61,7 @@ def Make_transformation(file_name, input_color, output_color):
         elif output_color == 2:
             output_name = model_blond2ginger.Transform_to_B(file_name)
         else:
-            output_name = input_name
+            output_name = file_name
 
     elif input_color == 1: #brown
         if output_color == 0:
@@ -69,16 +69,16 @@ def Make_transformation(file_name, input_color, output_color):
         elif output_color == 2:
             output_name = model_brown2ginger.Transform_to_B(file_name)
         else:
-            output_name = input_name
+            output_name = file_name
     elif input_color == 2:  #ginger:
         if output_color == 0:
             output_name = model_blond2ginger.Transform_to_A(file_name)
         elif output_color == 1:
             output_name = model_brown2ginger.Transform_to_A(file_name)
         else:
-            output_name = input_name
+            output_name = file_name
     else:
-        output_name = input_name
+        output_name = file_name
 
     return output_name
 
@@ -108,11 +108,11 @@ async def foto_input(message: types.Message):
     foto_color, confidence = Get_input_color(file_name)
     foto_color_name = colors_dict[foto_color]
     if confidence > 0.85:
-        answer_str = f"Nice foto! Your hair color is {foto_color_name}!"
+        answer_str = f"Nice foto! Your hair color is {foto_color_name}!\nChoose color you want to switch to:"
     elif confidence > 0.65:
-        answer_str = f"Nice foto! Looks like your hair color is {foto_color_name}"
+        answer_str = f"Nice foto! Looks like your hair color is {foto_color_name}.\nChoose color you want to switch to:"
     else:
-        answer_str = f"Nice foto! Your hair color looks like {foto_color_name}. I\'m not sure though."
+        answer_str = f"Nice foto! Your hair color looks like {foto_color_name}. I\'m not sure though.\nChoose color you want to switch to:"
 
     if foto_color == 0:
         await message.answer(answer_str, reply_markup=inline_kb_from0)
@@ -121,7 +121,7 @@ async def foto_input(message: types.Message):
     elif foto_color == 2:
         await message.answer(answer_str, reply_markup=inline_kb_from2)
     else:
-        await message.answer("Something went wrong, sorry")
+        await message.answer("Something went wrong, sorry. Answer:", foto_color)
 
 
 
@@ -136,7 +136,7 @@ async def process_callback_transform(callback_query: types.CallbackQuery):
     out_path = Make_transformation(file_name, input_color, output_color)
 
     img_result = open(out_path, 'rb')
-    await message.answer_photo(img_result, "Changing from" + color_dict[input_color] + " to " + color_dict[output_color])
+    await message.answer_photo(img_result, "Changing hair color from" + color_dict[input_color] + " to " + color_dict[output_color])
 
 
 @dp.message_handler()
