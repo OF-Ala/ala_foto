@@ -291,7 +291,9 @@ class Transform_model():
     def Transform_to_B(self, file_name):
         input_img = self.img_to_tensor(file_name)
         input_img = input_img.unsqueeze(0)
-        val_B_gen = self.gen_B(input_img)
+        with torch.no_grad():    
+            val_B_gen = self.gen_B(input_img)
+            
         result = self.tensor_to_img(val_B_gen[0],file_name) 
         val_B_gen = None
         return result
@@ -299,7 +301,9 @@ class Transform_model():
     def Transform_to_A(self, file_name):
         input_img = self.img_to_tensor(file_name)
         input_img = input_img.unsqueeze(0)
-        val_A_gen = self.gen_A(input_img)
+        with torch.no_grad():    
+            val_A_gen = self.gen_A(input_img)
+            
         result = self.tensor_to_img(val_A_gen[0],file_name)
         val_A_gen = None
         return 
