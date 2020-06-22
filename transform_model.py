@@ -236,8 +236,9 @@ class Discriminator_net(nn.Module):
 class Transform_model():
 
     def __init__(self, path_name, state_dir):
-        # все изображения будут масштабированы к размеру 256x256 px
-        self.RESCALE_SIZE = 256
+        # все изображения будут масштабированы к размеру 1024x**** px
+        # иначе расчеты идут ну очень долго
+        self.RESCALE_SIZE = 1024
         self.save_path = path_name
         self.gen_A = Generator_net()
         self.gen_B = Generator_net()
@@ -263,8 +264,13 @@ class Transform_model():
         image = Image.open(self.save_path + file_name)
         image.load()
 
-        image = image.resize((self.RESCALE_SIZE, self.RESCALE_SIZE))
-
+        #image = image.resize((self.RESCALE_SIZE, self.RESCALE_SIZE))
+        curr_size = image.size
+        if curr_size[0] > self.RESCALE_SIZE:
+            size0 = self.RESCALE_SIZE
+            size1 = int(curr_size[1] / curr_size[0] * self.RESCALE_SIZE)
+            image = image.resize((size0, size1))
+            
         image = np.array(image)
 
         image = np.array(image / 127.5 - 1, dtype='float32')
