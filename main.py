@@ -31,21 +31,61 @@ save_path = 'data/'
 model_blond2brown = transform_model.Transform_model(save_path, 'blond2brown')
 model_blond2ginger = transform_model.Transform_model(save_path, 'blond2ginger')
 model_brown2ginger = transform_model.Transform_model(save_path, 'brown2ginger')
+
+#model_black2brown = transform_model.Transform_model(save_path, 'black2brown')
+#model_black2ginger = transform_model.Transform_model(save_path, 'black2ginger')
+#model_black2blond = transform_model.Transform_model(save_path, 'black2blond')
+
+model_black2brown = transform_model.Transform_model(save_path, 'blond2brown')
+model_black2ginger = transform_model.Transform_model(save_path, 'blond2ginger')
+model_black2blond = transform_model.Transform_model(save_path, 'brown2ginger')
+
 hair_classifier = hair_classifier.Classifier_model(save_path)
 
 colors_dict = {
   0: 'blonde',
   1: 'brown',
-  2: 'ginger'
+  2: 'ginger',
+  3: 'black'  
 }
+
 files_color_dict = {}  #input_color
 
 inline_btn_blonde = InlineKeyboardButton('Blonde', callback_data=0)
 inline_btn_brown = InlineKeyboardButton('Brown', callback_data=1)
 inline_btn_ginger = InlineKeyboardButton('Ginger', callback_data=2)
-inline_kb_from0 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_ginger)
-inline_kb_from1 = InlineKeyboardMarkup().add(inline_btn_blonde, inline_btn_ginger)
-inline_kb_from2 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde)
+inline_btn_black = InlineKeyboardButton('Black', callback_data=3)
+
+inline_kb_from0 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_ginger,inline_btn_black)
+inline_kb_from1 = InlineKeyboardMarkup().add(inline_btn_blonde, inline_btn_ginger,inline_btn_black)
+inline_kb_from2 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde,inline_btn_black)
+inline_kb_from3 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde,inline_btn_ginger)
+
+transform_func_dict = {
+    (0,1):model_blond2brown.Transform_to_B, #blond 2 brown
+    (0,2):model_blond2ginger.Transform_to_B, #blond 2 ginger
+    (0,3):model_black2blond.Transform_to_A, #blond to black
+    
+    (1,0):model_blond2brown.Transform_to_A, #brown 2 blond
+    (1,2):model_brown2ginger.Transform_to_B, #brown to ginger
+    (1,3):model_black2brown.Transform_to_A, #brown 2 black
+    
+    (2,1):model_brown2ginger.Transform_to_A, #ginger 2 brown
+    (2,0):model_blond2ginger.Transform_to_A, #ginger 2 blond
+    (2,3):model_black2ginger.Transform_to_A, #ginger 2 black
+    
+    (3,1):model_black2brown.Transform_to_B, #black 2 brown
+    (3,2):model_black2ginger.Transform_to_B, #black 2 ginger
+    (3,0):model_black2blond.Transform_to_B #black to blond
+}
+
+kb_dict = {
+    0:inline_kb_from0,
+    1:inline_kb_from1,
+    2:inline_kb_from2,
+    3:inline_kb_from3    
+}
+    
 
 def Get_input_color(file_name):
     input_color, confidence = hair_classifier.predict_one_sample(file_name)
@@ -54,29 +94,8 @@ def Get_input_color(file_name):
 
 
 def Make_transformation(file_name, input_color, output_color):
-
-    if input_color == 0: #blond
-        if output_color == 1:
-            output_name = model_blond2brown.Transform_to_B(file_name)
-        elif output_color == 2:
-            output_name = model_blond2ginger.Transform_to_B(file_name)
-        else:
-            output_name = self.save_path + file_name
-
-    elif input_color == 1: #brown
-        if output_color == 0:
-            output_name = model_blond2brown.Transform_to_A(file_name)
-        elif output_color == 2:
-            output_name = model_brown2ginger.Transform_to_B(file_name)
-        else:
-            output_name = self.save_path + file_name
-    elif input_color == 2:  #ginger:
-        if output_color == 0:
-            output_name = model_blond2ginger.Transform_to_A(file_name)
-        elif output_color == 1:
-            output_name = model_brown2ginger.Transform_to_A(file_name)
-        else:
-            output_name = self.save_path + file_name
+    if (input_color, output_color) in transform_func_dict:
+        output_name = transform_func_dict[(input_color, output_color)](file_name)
     else:
         output_name = self.save_path + file_name
 
@@ -114,16 +133,10 @@ async def foto_input(message: types.Message):
     else:
         answer_str = f"Nice foto! Your hair color looks like {foto_color_name}. I\'m not sure though.\nChoose color you want to switch to:"
 
-    if foto_color == 0:
-        await message.answer(answer_str, reply_markup=inline_kb_from0)
-    elif foto_color == 1:
-        await message.answer(answer_str, reply_markup=inline_kb_from1)
-    elif foto_color == 2:
-        await message.answer(answer_str, reply_markup=inline_kb_from2)
+    if foto_color in kb_dict:
+        await message.answer(answer_str, reply_markup=kb_dict[foto_color])
     else:
         await message.answer("Something went wrong, sorry. Answer:", foto_color)
-
-
 
 
 #@dp.callback_query_handler(func=lambda c: c.data)
