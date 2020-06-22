@@ -238,7 +238,7 @@ class Transform_model():
     def __init__(self, path_name, state_dir):
         # все изображения будут масштабированы к размеру 1024x**** px
         # иначе расчеты идут ну очень долго
-        self.RESCALE_SIZE = 800
+        self.RESCALE_SIZE = 640
         self.save_path = path_name
         self.gen_A = Generator_net()
         self.gen_B = Generator_net()
