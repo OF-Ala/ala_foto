@@ -306,4 +306,4 @@ class Transform_model():
             
         result = self.tensor_to_img(val_A_gen[0],file_name)
         val_A_gen = None
-        return 
+        return result
