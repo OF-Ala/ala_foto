@@ -14,7 +14,7 @@ class Classifier_model():
         self.RESCALE_SIZE = 224
         self.save_path = path_name
         self.model = models.resnet18(pretrained=True)
-        self.model.fc = nn.Linear(512, 3)
+        self.model.fc = nn.Linear(512, 4)
         self.model.fc.load_state_dict(torch.load(self.save_path + 'classification-fc.pt', map_location='cpu'))
         self.model.layer4[0].load_state_dict(torch.load(self.save_path + 'classification-4-0.pt', map_location='cpu'))
         self.model.layer4[1].load_state_dict(torch.load(self.save_path + 'classification-4-1.pt', map_location='cpu'))
