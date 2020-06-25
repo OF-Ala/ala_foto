@@ -159,6 +159,7 @@ async def echo(message: types.Message):
 
 
 async def on_startup(dp):
+    await bot.delete_webhook()
     await bot.set_webhook(WEBHOOK_URL)
     # insert code here to run it after start
 
@@ -169,7 +170,7 @@ async def on_shutdown(dp):
     # insert code here to run it before shutdown
 
     # Remove webhook (not acceptable in some cases)
-    await bot.delete_webhook()
+    #await bot.delete_webhook()
 
     # Close DB connection (if used)
     await dp.storage.close()
