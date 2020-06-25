@@ -32,18 +32,14 @@ model_blond2brown = transform_model.Transform_model(save_path, 'blond2brown')
 model_blond2ginger = transform_model.Transform_model(save_path, 'blond2ginger')
 model_brown2ginger = transform_model.Transform_model(save_path, 'brown2ginger')
 
-#model_black2brown = transform_model.Transform_model(save_path, 'black2brown')
-#model_black2ginger = transform_model.Transform_model(save_path, 'black2ginger')
-#model_black2blond = transform_model.Transform_model(save_path, 'black2blond')
-
-model_black2brown = transform_model.Transform_model(save_path, 'blond2brown')
-model_black2ginger = transform_model.Transform_model(save_path, 'blond2ginger')
-model_black2blond = transform_model.Transform_model(save_path, 'brown2ginger')
+model_black2brown = transform_model.Transform_model(save_path, 'black2brown')
+model_black2ginger = transform_model.Transform_model(save_path, 'black2ginger')
+model_black2blond = transform_model.Transform_model(save_path, 'black2blond')
 
 hair_classifier = hair_classifier.Classifier_model(save_path)
 
 colors_dict = {
-  0: 'black'  
+  0: 'black',  
   1: 'blonde',
   2: 'brown',
   3: 'ginger' 
