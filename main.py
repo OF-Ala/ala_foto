@@ -43,40 +43,40 @@ model_black2blond = transform_model.Transform_model(save_path, 'brown2ginger')
 hair_classifier = hair_classifier.Classifier_model(save_path)
 
 colors_dict = {
-  0: 'blonde',
-  1: 'brown',
-  2: 'ginger',
-  3: 'black'  
+  0: 'black'  
+  1: 'blonde',
+  2: 'brown',
+  3: 'ginger' 
 }
 
 files_color_dict = {}  #input_color
 
-inline_btn_blonde = InlineKeyboardButton('Blonde', callback_data=0)
-inline_btn_brown = InlineKeyboardButton('Brown', callback_data=1)
-inline_btn_ginger = InlineKeyboardButton('Ginger', callback_data=2)
-inline_btn_black = InlineKeyboardButton('Black', callback_data=3)
+inline_btn_black = InlineKeyboardButton('Black', callback_data=0)
+inline_btn_blonde = InlineKeyboardButton('Blonde', callback_data=1)
+inline_btn_brown = InlineKeyboardButton('Brown', callback_data=2)
+inline_btn_ginger = InlineKeyboardButton('Ginger', callback_data=3)
 
-inline_kb_from0 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_ginger,inline_btn_black)
-inline_kb_from1 = InlineKeyboardMarkup().add(inline_btn_blonde, inline_btn_ginger,inline_btn_black)
-inline_kb_from2 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde,inline_btn_black)
-inline_kb_from3 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde,inline_btn_ginger)
+inline_kb_from0 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde,inline_btn_ginger)
+inline_kb_from1 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_ginger,inline_btn_black)
+inline_kb_from2 = InlineKeyboardMarkup().add(inline_btn_blonde, inline_btn_ginger,inline_btn_black)
+inline_kb_from3 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde,inline_btn_black)
 
 transform_func_dict = {
-    (0,1):model_blond2brown.Transform_to_B, #blond 2 brown
-    (0,2):model_blond2ginger.Transform_to_B, #blond 2 ginger
-    (0,3):model_black2blond.Transform_to_A, #blond to black
+    (0,2):model_black2brown.Transform_to_B, #black 2 brown
+    (0,3):model_black2ginger.Transform_to_B, #black 2 ginger
+    (0,1):model_black2blond.Transform_to_B #black to blond
     
-    (1,0):model_blond2brown.Transform_to_A, #brown 2 blond
-    (1,2):model_brown2ginger.Transform_to_B, #brown to ginger
-    (1,3):model_black2brown.Transform_to_A, #brown 2 black
+    (1,2):model_blond2brown.Transform_to_B, #blond 2 brown
+    (1,3):model_blond2ginger.Transform_to_B, #blond 2 ginger
+    (1,0):model_black2blond.Transform_to_A, #blond to black
     
-    (2,1):model_brown2ginger.Transform_to_A, #ginger 2 brown
-    (2,0):model_blond2ginger.Transform_to_A, #ginger 2 blond
-    (2,3):model_black2ginger.Transform_to_A, #ginger 2 black
+    (2,1):model_blond2brown.Transform_to_A, #brown 2 blond
+    (2,3):model_brown2ginger.Transform_to_B, #brown to ginger
+    (2,0):model_black2brown.Transform_to_A, #brown 2 black
     
-    (3,1):model_black2brown.Transform_to_B, #black 2 brown
-    (3,2):model_black2ginger.Transform_to_B, #black 2 ginger
-    (3,0):model_black2blond.Transform_to_B #black to blond
+    (3,2):model_brown2ginger.Transform_to_A, #ginger 2 brown
+    (3,1):model_blond2ginger.Transform_to_A, #ginger 2 blond
+    (3,0):model_black2ginger.Transform_to_A, #ginger 2 black
 }
 
 kb_dict = {
