@@ -60,7 +60,7 @@ inline_kb_from3 = InlineKeyboardMarkup().add(inline_btn_brown, inline_btn_blonde
 transform_func_dict = {
     (0,2):model_black2brown.Transform_to_B, #black 2 brown
     (0,3):model_black2ginger.Transform_to_B, #black 2 ginger
-    (0,1):model_black2blond.Transform_to_B #black to blond
+    (0,1):model_black2blond.Transform_to_B, #black to blond
     
     (1,2):model_blond2brown.Transform_to_B, #blond 2 brown
     (1,3):model_blond2ginger.Transform_to_B, #blond 2 ginger
@@ -72,7 +72,7 @@ transform_func_dict = {
     
     (3,2):model_brown2ginger.Transform_to_A, #ginger 2 brown
     (3,1):model_blond2ginger.Transform_to_A, #ginger 2 blond
-    (3,0):model_black2ginger.Transform_to_A, #ginger 2 black
+    (3,0):model_black2ginger.Transform_to_A #ginger 2 black
 }
 
 kb_dict = {
