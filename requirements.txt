@@ -1,5 +1,5 @@
 aiogram==2.9.2
-aiohttp==3.6.2
+aiohttp==3.7.4
 alabaster==0.7.12
 numpy==1.16.4
 https://download.pytorch.org/whl/cpu/torch-1.5.1%2Bcpu-cp37-cp37m-linux_x86_64.whl
